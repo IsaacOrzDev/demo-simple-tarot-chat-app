@@ -20,4 +20,4 @@ python_version = "3.10"
 
 [scripts]
 ui = "streamlit run ./src/ui.py"
-persist = "python ./src/persist.py"
+persist = "python ./src/vector_db_persist.py"

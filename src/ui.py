@@ -3,16 +3,16 @@ from chat import chat
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
-        {"role": "assistant", "content": "How can I help you?"}]
+        {"role": "AI", "content": "How can I help you?"}]
 
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({"role": "Human", "content": prompt})
     st.chat_message("user").write(prompt)
     # print('st.session_state.messages', st.session_state.messages)
-    response = chat(prompt)
+    response = chat(prompt,  st.session_state.messages)
     st.session_state.messages.append(
-        {"role": "assistant", "content": response})
-    st.chat_message("assistant").write(response)
+        {"role": "AI", "content": response})
+    st.chat_message("AI").write(response)
