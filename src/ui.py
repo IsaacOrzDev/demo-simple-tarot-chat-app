@@ -3,7 +3,7 @@ from chat import chat
 from draw import draw_card
 
 '''
-# Tarot Chat 🔮
+# Tarot Chat 🤖🔮
 '''
 
 num_of_cards = 3
@@ -34,6 +34,7 @@ else:
     if "messages" not in st.session_state:
         response = chat(
             f"How about the drawing result?", [], st.session_state['card'], st.session_state['position'])
+        # response = ""
         st.session_state["messages"] = [
             {"role": "AI",
                 "content": f"You have drawn {st.session_state['card']} in {st.session_state['position']} position.\n {response}"}
@@ -41,6 +42,11 @@ else:
     if "messages" in st.session_state:
         st.button("Reset Drawing and conversations",
                   key="reset", on_click=reset)
+        if st.session_state["position"] is "Reversed":
+            st.markdown(
+                '<style>img[alt="0"] {transform: scaleY(-1)};</style>', unsafe_allow_html=True)
+        st.image(f"./images/{st.session_state['card']}.png",
+                 caption=st.session_state.card, width=300)
         for msg in st.session_state.messages:
             st.chat_message(msg["role"]).write(msg["content"])
 
