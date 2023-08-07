@@ -6,12 +6,11 @@ from draw import draw_card
 # Tarot Chat 🤖🔮
 '''
 
-num_of_cards = 3
+num_of_cards = 5
 
 
 def select_card(input):
     result = draw_card(input, num_of_cards)
-    print(result)
     st.session_state.card = result["card"]
     st.session_state.position = result["position"]
 
@@ -42,13 +41,14 @@ else:
     if "messages" in st.session_state:
         st.button("Reset Drawing and conversations",
                   key="reset", on_click=reset)
-        if st.session_state["position"] is "Reversed":
+        if st.session_state["position"] == "Reversed":
             st.markdown(
                 '<style>img[alt="0"] {transform: scaleY(-1)};</style>', unsafe_allow_html=True)
         st.image(f"./images/{st.session_state['card']}.png",
                  caption=st.session_state.card, width=300)
         for msg in st.session_state.messages:
-            st.chat_message(msg["role"]).write(msg["content"])
+            role = "assistant" if msg["role"] == "AI" else "user"
+            st.chat_message(role).write(msg["content"])
 
         if prompt := st.chat_input(placeholder="Please ask any question if you want to know more about the result"):
             st.session_state.messages.append(

@@ -11,10 +11,9 @@ llm = Cohere(temperature=0.5)
 summary_prompt_template = """
 Please summarize the last question that the human want to ask base on the chat history with AI.
 The questions from human should related to Tarot cards and drawing result, if some questions from human are not related to Tarot cards and drawing result, please ignore them.
-Response with the last question from human only, no other words, also please do not answer the question.
+Return the last question from human only.
 Chat History: 
 {chat_history}
-Question:
 """
 summary_prompt = PromptTemplate(
     input_variables=["chat_history"], template=summary_prompt_template)
@@ -32,12 +31,12 @@ If the context and search result cannot help you to answer the question, please 
 Please do not repeat the answer you have mention before.
 If the context is nothing can help you, please use your own thought to answer.
 If the question is completely not related to Tarot cards and Tarot result, please answer 'I am a Tarot reader, and I can only answer questions related to the Tarot cards'.
+Drawing Result: {drawing_result}
 Context: 
 {context}
-Human: 
+Question: 
 {question}
-{drawing_result}
-AI:"""
+Tarot reader AI:"""
 answer_prompt = PromptTemplate(
     input_variables=["question", "drawing_result", "context"], template=answer_prompt_template)
 answer_chain = LLMChain(llm=llm, prompt=answer_prompt, verbose=True)
@@ -45,15 +44,16 @@ answer_chain = LLMChain(llm=llm, prompt=answer_prompt, verbose=True)
 
 def chat(input, conversations, card, position):
     conversations_str = ""
-    drawing_result = f"if I draw a card with {card} in {position} position"
+    drawing_result = f"if drawing a card with {card} in {position} position"
     for conversation in conversations:
         conversations_str += f"{conversation['role']} : {conversation['content']}\n"
     # print(conversations_str)
-    question = summary_chain.run(chat_history=conversations_str)
-    # print(question)
-    context = qa.run(question + drawing_result)
-    context += qa.run(drawing_result)
+    summary = summary_chain.run(chat_history=conversations_str)
+    print(summary)
+    # context = ""
+    context = qa.run(summary + drawing_result)
+    context += qa.run(f"Please explain {card} in {position} position")
     response = answer_chain.run(
-        {"question": question, "context": context, "drawing_result": drawing_result})
+        {"question": input + drawing_result, "context": context, "drawing_result": f"{card} in {position} position"})
     # print(response)
     return response

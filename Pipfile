@@ -6,12 +6,12 @@ name = "pypi"
 [packages]
 langchain = "*"
 python-dotenv = "*"
-openapi = "*"
 cohere = "*"
 streamlit = "*"
 streamlit-chat = "*"
 chromadb = "*"
 sentence-transformers = "*"
+openai = "*"
 
 [dev-packages]
 
@@ -21,3 +21,4 @@ python_version = "3.10"
 [scripts]
 ui = "streamlit run ./src/ui.py"
 persist = "python ./src/vector_db_persist.py"
+docker-build = "docker build --no-cache --platform linux/amd64 -t tarot-app ."
