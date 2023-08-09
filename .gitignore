@@ -1,2 +1,10 @@
 db
 .env
+*.terraform
+*credentials.json
+*terraform.tfstate
+*terraform.tfstate.backup
+*.terraform.lock.hcl
+*.terraform.tfstate.lock.info
+*variables.tfvars
+docker_push.sh
